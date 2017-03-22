@@ -1,0 +1,12 @@
+---
+- include: etc_hosts.yml 
+  tags:
+    etc_hosts
+
+- include: docker_common_repo.yml
+  tags:
+    repository
+
+- name: Set common as completed
+  set_fact:
+    common_completed: true
