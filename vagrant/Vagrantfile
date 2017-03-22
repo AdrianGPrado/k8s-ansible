@@ -1,0 +1,91 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+require "yaml"
+
+### This is a new provider, different then cloudbau's.
+### RUN: vagrant plugin uninstall vagrant-openstack-plugin"
+### Then RUN: "vagrant plugin install vagrant-openstack-provider"
+
+$num_nodes = (ENV['NUM_NODES'] || 1).to_i
+$num_masters = (ENV['NUM_MASTERS'] || 1).to_i
+# OS image to use. Currently supported:
+# - "centos7" on openstack, libvirt, virtualbox
+$os_image = ("centos7").to_sym
+
+# Machines under VirtualBox provier use static IPs, based on VM index.
+# Master has index 0.
+VBOX_STATIC_IP_TEMPLATE = "172.32.128.1%d"
+
+VAGRANTFILE_API_VERSION = "2"
+
+# Openstack providers are best used with latest versions.
+Vagrant.require_version ">= 1.7"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  # By default, Vagrant 1.7+ automatically inserts a different
+  # insecure keypair for each new VM created. The easiest way
+  # to use the same keypair for all the machines is to disable
+  # this feature and rely on the legacy insecure key.
+  config.ssh.insert_key = false
+
+  # This explicitly sets the order that vagrant will use by default if no --provider given
+  config.vm.provider "virtualbox"
+
+  # By default, Vagrant itself assumes that sudo requires no
+  # password, therefore it does not need a tty. Some OS images
+  # instead require a tty in order to run sudo.
+  # Below configuration enable the tty on Vagrant 1.4+
+  # See https://goo.gl/fC5sPW for details
+  config.ssh.pty = true
+
+  def set_vbox_box(config)
+    case $os_image
+    when :centos7
+      config.vm.box = "centos/7"
+    end
+  end
+
+  def set_vbox(vb, config, vm_idx)
+    set_vbox_box(config)
+
+    config.vm.network "private_network", ip: VBOX_STATIC_IP_TEMPLATE % vm_idx
+    vb.gui = false
+    vb.memory = 2048
+    vb.cpus = 2
+
+    # Use faster paravirtualized networking
+    vb.customize ["modifyvm", :id, "--nictype1", "virtio"]
+    vb.customize ["modifyvm", :id, "--nictype2", "virtio"]
+  end
+
+  def set_provider(n, vm_idx)
+    n.vm.provider :virtualbox do |vb, override|
+      set_vbox(vb, override, vm_idx)
+    end
+  end
+
+  # No syncronized folder. Vagrant only provisions.
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+
+  masters = Array.new()
+  $num_masters.times do |i|
+    # multi vm config
+    name = "k8s-master-#{i+1}"
+    masters.push(name)
+    config.vm.define "#{name}" do |n|
+      n.vm.hostname = name
+      set_provider(n, i )
+    end
+  end
+
+  nodes = Array.new()
+  $num_nodes.times do |i|
+    # multi vm config
+    name = "k8s-node-#{i+1}"
+    nodes.push(name)
+    config.vm.define "#{name}" do |n|
+      n.vm.hostname = name
+      set_provider(n, i + $num_masters)
+    end
+  end
+end
