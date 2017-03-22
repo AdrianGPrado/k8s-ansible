@@ -1,0 +1,31 @@
+---
+- name: Install etcd package
+  package:
+    name: etcd
+    state: latest
+
+- name: Write etcd config file
+  template: 
+    src=etcd.conf.j2 
+    dest=/etc/etcd/etcd.conf
+
+- name: Enable etcd
+  service: 
+    name=etcd 
+    enabled=yes
+  when: etcd_enable == true
+
+- name: Start etcd
+  service: 
+    name=etcd 
+    state=started
+  register: etcd_started
+
+- name: Make etcd network infrastructure script
+  template: 
+    src=etcd_network.sh.j2 
+    dest=/tmp/etcd_network.sh
+
+- name: Make etcd network infrastructure
+  command: sh /tmp/etcd_network.sh
+
