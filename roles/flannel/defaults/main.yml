@@ -1,0 +1,14 @@
+---
+
+flanneld_started: true
+flanneld_enable: true
+
+# default configuration directory
+flannel_config_dir: "/etc/sysconfig"
+
+etcd_url_scheme: http
+
+etcd_client_port: 2379
+
+etcd_cluster_name: kube-centos
+

@@ -1,0 +1,5 @@
+---
+- name: restart flannel
+  service: name=flanneld state=restarted
+  notify:
+    - restart docker

@@ -1,0 +1,20 @@
+---
+
+- name: Install Flannel with package manager
+  package:
+    name: flannel
+    state: latest
+
+- name: Write flanneld config file
+  template: 
+    src=flanneld.j2 
+    dest={{ flannel_config_dir }}/flanneld
+  notify:
+    - restart flannel
+
+- name: Enable flanneld
+  service: 
+    name=flanneld 
+    enabled=yes
+  when: flanneld_enable == true
+
