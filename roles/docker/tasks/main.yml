@@ -1,0 +1,8 @@
+---
+- name: Install docker distribution package
+  package: 
+    name: docker
+    state: latest 
+  notify:
+  - reload docker
+  - enable docker
