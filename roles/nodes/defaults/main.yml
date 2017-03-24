@@ -1,0 +1,20 @@
+---
+
+etcd_client_port: '2379'
+
+# Internal DNS domain name.
+# This domain must not be used in your network. Services will be discoverable
+# under <service-name>.<namespace>.<domainname>, e.g.
+# myservice.default.svc.cluster.local
+dns_domain: "{{ cluster_name }}"
+
+# IP address of the DNS server.
+# Kubernetes will create a pod with several containers, serving as the DNS
+# server and expose it under this IP address. The IP address must be from
+# the range specified as kube_service_addresses. This magic will actually
+# pick the 10th ip address in the kube_service_addresses range and use that.
+dns_server: "{{ kube_service_addresses|ipaddr('net')|ipaddr(10)|ipaddr('address') }}"
+
+kubelet_port: 10250
+kubelet_address: "0.0.0.0"
+

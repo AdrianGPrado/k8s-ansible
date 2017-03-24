@@ -1,0 +1,10 @@
+---
+
+# Install docker
+- hosts: all
+  become: yes
+  roles:
+    - { role: common, when: common_completed is not defined }
+    - docker
+  tags:
+    - docker

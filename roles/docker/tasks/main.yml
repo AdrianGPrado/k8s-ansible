@@ -1,0 +1,6 @@
+---
+
+- name: Install docker distribution package
+  package: 
+    name: docker
+    state: latest 

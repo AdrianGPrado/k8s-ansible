@@ -1,0 +1,28 @@
+---
+
+# Install
+- name: Install kubernetes node
+  package:
+    name: kubernetes-node
+    state: latest
+
+# Configure
+- name: Read the hostname in `/etc/hostname`
+  command: 'cat /etc/hostname'
+  register: etc_hostname_out
+
+- name: Catch output from cat command
+  set_fact:
+    etc_hostname: "{{ etc_hostname_out.stdout_lines[0] }}"
+
+- name: Read the master node hostname
+  set_fact:
+    master_hostname: "{{ item }}"
+  with_items: "{{ groups['masters'] }}"
+
+- name: Write the config file for kubelet
+  template: 
+    src=kubelet.j2 
+    dest={{ kube_config_dir }}/kubelet
+  notify:
+    - restart daemons

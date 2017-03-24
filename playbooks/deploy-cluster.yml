@@ -1,0 +1,22 @@
+---
+# This playbook deploys a kubernetes cluster
+# with the default addons.
+
+# Install etcd
+- include: deploy-etcd.yml
+
+# Install docker
+- include: deploy-docker.yml
+
+# install flannel
+- include: deploy-flannel.yml
+
+# install kube master services
+- include: deploy-master.yml
+
+# launch addons, like dns
+# - include: deploy-addons.yml
+
+# install kubernetes on the nodes
+- include: deploy-node.yml
+

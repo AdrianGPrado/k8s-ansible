@@ -1,0 +1,7 @@
+---
+# RHEL, CentOS repository
+yum_repo_name: "virt7-docker-common-release"
+yum_repo_description: "Repository with 'docker, etcd, k8s, flannel'"
+yum_repo_baseurl: "http://cbs.centos.org/repos/virt7-docker-common-release/x86_64/os/"
+yum_repo_gpgcheck: "no"
+
