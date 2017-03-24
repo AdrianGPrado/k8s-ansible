@@ -12,4 +12,6 @@
   template: 
     src=apiserver.j2 
     dest={{ kube_config_dir }}/apiserver
+  notify:
+    - restart daemons
 

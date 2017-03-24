@@ -1,14 +1,9 @@
 ---
 
-- name: reload systemd
-  command: systemctl --system daemon-reload
-  notify:
-    - restart daemons
-  when: not (ansible_distribution == "Ubuntu" and ansible_distribution_major_version|int < 15) or (is_coreos)
-
 - name: restart daemons
   command: /bin/true
   notify:
+    - reload systemd 
     - restart apiserver
     - restart controller-manager
     - restart scheduler
@@ -28,12 +23,8 @@
     name=kube-scheduler 
     state=restarted
 
-- name: restart iptables
+- name: restart flanneld
   service: 
-    name=iptables 
+    name=flanneld 
     state=restarted
 
-- name: restart kubelet
-  service: 
-    name=kubelet 
-    state=restarted

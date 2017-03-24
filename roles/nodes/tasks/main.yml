@@ -24,4 +24,5 @@
   template: 
     src=kubelet.j2 
     dest={{ kube_config_dir }}/kubelet
-
+  notify:
+    - restart daemons

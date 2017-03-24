@@ -12,8 +12,8 @@
     src=etcd.conf.j2 
     dest=/etc/etcd/etcd.conf
   notify:
-    - Enable etcd
-    - Restart etcd
+    - enable etcd
+    - restart etcd
 
 ## Create etcd network
 - name: Deploy etcd network infrastructure script
