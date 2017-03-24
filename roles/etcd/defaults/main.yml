@@ -4,6 +4,8 @@
 etcd_enable: true
 etcd_name: default
 
+etcd_cluster_name: kube-centos
+
 etcd_listen_all: "0.0.0.0"
 
 # Ports and http schemes
