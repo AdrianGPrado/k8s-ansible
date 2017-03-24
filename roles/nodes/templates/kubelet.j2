@@ -1,0 +1,16 @@
+# The address for the info server to serve on
+KUBELET_ADDRESS="--address={{ kubelet_address }}"
+
+# The port for the info server to serve on
+KUBELET_PORT="--port={{ kubelet_port }}"
+
+# You may leave this blank to use the actual hostname
+# Check the node number!
+KUBELET_HOSTNAME="--hostname-override={{ etc_hostname }}"
+
+# Location of the api-server
+KUBELET_API_SERVER="--api-servers={{ cluster_url_scheme }}://{{ master_hostname
+}}:{{ cluster_port }}"
+
+# Add your own!
+KUBELET_ARGS=""

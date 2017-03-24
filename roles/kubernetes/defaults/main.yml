@@ -1,0 +1,11 @@
+---
+
+kube_config_dir: /etc/kubernetes
+
+# The port that the Kubernetes apiserver component listens on.
+kube_master_api_port: 443
+
+cluster_url_scheme: "{{ etcd_url_scheme | default('http') }}"
+cluster_hostname: "{{ master_cluster_hostname | default('') }}"
+cluster_port: "{{ master_cluster_port | default('8080') }}"
+

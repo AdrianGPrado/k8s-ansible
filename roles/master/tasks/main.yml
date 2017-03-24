@@ -1,0 +1,15 @@
+---
+
+# Install
+- name: Install kubernetes master
+  package:
+    name: kubernetes-master
+    state: latest
+
+
+# Configure
+- name: Write the config file for the api server
+  template: 
+    src=apiserver.j2 
+    dest={{ kube_config_dir }}/apiserver
+
