@@ -1,0 +1,10 @@
+---
+
+- name: Enable docker-common-repo
+  yum_repository:
+    name: "{{ yum_repo_name }}"
+    description: "{{ yum_repo_description }}"
+    baseurl: "{{ yum_repo_baseurl }}"
+    gpgcheck: "{{ yum_repo_gpgcheck }}"
+    enabled: yes
+

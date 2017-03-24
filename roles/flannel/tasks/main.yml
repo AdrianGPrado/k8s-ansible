@@ -1,0 +1,14 @@
+---
+
+# Install package
+- name: Install Flannel with package manager
+  package:
+    name: flannel
+    state: latest
+
+# Configure
+- name: Write flanneld config file
+  template: 
+    src=flanneld.j2 
+    dest={{ flannel_config_dir }}/flanneld
+

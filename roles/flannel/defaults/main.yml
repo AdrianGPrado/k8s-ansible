@@ -1,0 +1,14 @@
+---
+
+flanneld_started: true
+flanneld_enable: true
+
+# default configuration directory
+flannel_config_dir: "/etc/sysconfig"
+
+flannel_url_scheme: "{{ etcd_url_scheme | default('http') }}"
+
+flannel_client_port: "{{ etcd_client_port | default(2379) }}"
+
+flannel_cluster_name: "{{ etcd_cluster_name | default('kube-centos') }}"
+

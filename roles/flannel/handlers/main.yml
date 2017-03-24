@@ -1,0 +1,12 @@
+---
+
+- name: restart flanneld
+  service: 
+    name=flanneld 
+    state=restarted
+
+- name: enable flanneld
+  service: 
+    name=flanneld 
+    enabled=yes
+

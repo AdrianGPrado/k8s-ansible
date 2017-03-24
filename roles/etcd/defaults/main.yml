@@ -1,0 +1,26 @@
+---
+
+# Enable etcd service
+etcd_enable: true
+etcd_name: default
+
+etcd_cluster_name: kube-centos
+
+etcd_listen_all: "0.0.0.0"
+
+# Ports and http schemes
+etcd_client_port: 2379
+etcd_url_scheme: http
+
+## /etc/etcd/etcd.conf file variables
+### [member]
+# ETCD_DATA_DIR
+etcd_data_dir: "/var/lib/etcd/default.etcd"
+
+# ETCD_LISTEN_CLIENT_URLS
+etcd_listen_client_urls: "{{ etcd_url_scheme }}://{{ etcd_listen_all }}:{{ etcd_client_port }}"
+
+### [cluster]
+# ETCD_ADVERTISE_CLIENT_URLS
+etcd_advertise_client_urls: "{{ etcd_url_scheme }}://{{ etcd_listen_all }}:{{ etcd_client_port }}"
+
