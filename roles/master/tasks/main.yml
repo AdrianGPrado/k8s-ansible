@@ -2,16 +2,66 @@
 
 # Install
 - name: Install kubernetes master
-  package:
-    name: kubernetes-master
-    state: latest
+  include: install.yml
+  tags: install
 
+# Configure and start master components
+# I.e. apiserver, controller manager, scheduler and kubectl
+- name: Configure apiserver
+  include: apiserver-configure.yml
+  tags: configure
 
-# Configure
-- name: Write the config file for the api server
-  template: 
-    src=apiserver.j2 
-    dest={{ kube_config_dir }}/apiserver
-  notify:
-    - restart daemons
+- name: Copy the certificates from the first master to the other masters
+  include: cert-copy.yml
+
+- name: Start apiserver
+  include: apiserver-start.yml
+
+- name: Collect master tokens
+  include: collect-tokens.yml
+  tags: configure
+
+- name: Configure controller-manager
+  include: controller-manager-configure.yml
+  tags: configure
+
+- name: Start controller-manager
+  include: controller-manager-start.yml
+
+- name: Configure scheduler
+  include: scheduler-configure.yml
+  tags: configure
+
+- name: Start scheduler
+  include: scheduler-start.yml
+
+- name: Configure kubectl
+  include: kubectl-configure.yml
+  tags: configure
+
+# Networking
+- name: Update firewalld to open apiserver port
+  include: firewalld.yml
+  when: has_firewalld
+  tags: configure
+
+# Restart services - this happens when a cluster has a service already running
+# Either from previous ansible deployment or on an already set up cluster
+- name: Call restart apiserver
+  include: apiserver-restart.yml
+  when: apiserver_modified == true and
+        apiserver_started.changed == false
+  tags: restart
+
+- name: Call restart controller-manager
+  include: controller-manager-restart.yml
+  when: controller_manager_modified == true and
+        controller_manager_started.changed == false
+  tags: restart
+
+- name: Call restart scheduler
+  include: scheduler-restart.yml
+  when: scheduler_modified == true and 
+        scheduler_started.changed == false
+  tags: restart
 
