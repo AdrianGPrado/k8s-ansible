@@ -15,6 +15,16 @@
     - enable etcd
     - restart etcd
 
+- name: enable etcd
+  service: 
+    name=etcd 
+    enabled=yes
+
+- name: restart etcd
+  service: 
+    name=etcd 
+    state=restarted
+
 ## Create etcd network
 - name: Deploy etcd network infrastructure script
   template: 
