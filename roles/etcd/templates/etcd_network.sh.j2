@@ -1,2 +1,0 @@
-etcdctl mkdir /kube-centos/network
-etcdctl mk /{{ etcd_cluster_name }}/network/config "{ \"Network\": \"172.30.0.0/16\", \"SubnetLen\": 24, \"Backend\": { \"Type\": \"vxlan\" } }"

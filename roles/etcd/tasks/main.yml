@@ -1,37 +1,15 @@
 ---
 
-## Install packages
 - name: Install etcd package
-  package:
-    name=etcd
-    state=latest
+  include: install.yml
+  tags: install
 
-## Configure etcd
-- name: Write etcd config file
-  template: 
-    src=etcd.conf.j2 
-    dest=/etc/etcd/etcd.conf
-  notify:
-    - enable etcd
-    - restart etcd
+- name: Configure etcd package
+  include: configure.yml
+  tags: configure
 
-- name: enable etcd
-  service: 
-    name=etcd 
-    enabled=yes
+# etcd.service needs to be running to configure etcd-network or to 
+# start flanneld.service
+- name: Start etcd package
+  include: start-etcd.yml
 
-- name: restart etcd
-  service: 
-    name=etcd 
-    state=restarted
-
-## Create etcd network
-- name: Deploy etcd network infrastructure script
-  template: 
-    src=etcd_network.sh.j2 
-    dest=/tmp/etcd_network.sh
-
-- name: Make etcd network infrastructure
-  command: >
-    sh /tmp/etcd_network.sh
-  ignore_errors: yes
