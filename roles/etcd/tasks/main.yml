@@ -35,4 +35,3 @@
   command: >
     sh /tmp/etcd_network.sh
   ignore_errors: yes
-
