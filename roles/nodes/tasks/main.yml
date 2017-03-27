@@ -1,28 +1,49 @@
 ---
 
-# Install
-- name: Install kubernetes node
-  package:
-    name: kubernetes-node
-    state: latest
+- name: Disable swap
+  include: swapoff.yml
+  tags: configure
 
-# Configure
-- name: Read the hostname in `/etc/hostname`
-  command: 'cat /etc/hostname'
-  register: etc_hostname_out
+# Install the kube node components
+# E.g. applying package manager, downloading binaries from github, etc.
+- name: Install kube node
+  include: install.yml
+  tags: install
 
-- name: Catch output from cat command
-  set_fact:
-    etc_hostname: "{{ etc_hostname_out.stdout_lines[0] }}"
+# Configure and start node components
+# I.e. kubelet and proxy
+- name: Collect tokens for kubelet and proxy
+  include: collect-tokens.yml
+  tags: configure
 
-- name: Read the master node hostname
-  set_fact:
-    master_hostname: "{{ item }}"
-  with_items: "{{ groups['masters'] }}"
+- name: Configure kubelet
+  include: kubelet-configure.yml
+  tags: configure
 
-- name: Write the config file for kubelet
-  template: 
-    src=kubelet.j2 
-    dest={{ kube_config_dir }}/kubelet
-  notify:
-    - restart daemons
+- name: Start kubelet
+  include: kubelet-start.yml
+
+- name: Configure proxy
+  include: proxy-configure.yml
+  tags: configure
+
+- name: Start proxy
+  include: proxy-start.yml
+
+# Networking
+- include: firewalld.yml
+  when: has_firewalld
+  tags: configure
+
+# Restart services - this happens when a cluster has a service already running
+# Either from previous ansible deployment or on an already set up cluster
+- name: Call restart kubelet
+  include: kubelet-restart.yml
+  when: kubelet_modified == true and kubelet_started.changed == false
+  tags: restart
+
+- name: Call restart proxy
+  include: proxy-restart.yml
+  when: proxy_modified == true and proxy_started.changed == false
+  tags: restart
+
