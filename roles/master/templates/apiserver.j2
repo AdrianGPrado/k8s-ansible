@@ -1,30 +1,26 @@
-{% macro etcd_servers() -%}
-{%- for node in groups['etcd'] -%}
-    {{ master_url_scheme }}://{{ node }}:{{ etcd_client_port }}
-    {%- if not loop.last -%},{%- endif -%}
-{%- endfor -%}
-{% if master_url_scheme is defined and master_url_scheme == 'https' %} 
-  --etcd-cafile={{ apiserver_etcd_ca_file }} 
-  --etcd-certfile={{ apiserver_etcd_cert_file }} 
-  --etcd-keyfile={{ apiserver_etcd_key_file }}
-{% endif %}
-{% endmacro -%}
+###
+# kubernetes system config
+#
+# The following values are used to configure the kube-apiserver
+#
+
 # The address on the local server to listen to.
-KUBE_API_ADDRESS="--address=0.0.0.0"
+KUBE_API_ADDRESS="--insecure-bind-address={{ kube_apiserver_insecure_bind_address }}"
 
 # The port on the local server to listen on.
-KUBE_API_PORT="--port=8080"
+KUBE_API_PORT="--secure-port={{ kube_master_api_port }}"
 
-# Port kubelets listen on
-KUBELET_PORT="--kubelet-port=10250"
-
-# Comma separated list of nodes in the etcd cluster
-KUBE_ETCD_SERVERS="--etcd-servers={{ etcd_servers() }}"
+# Port nodes listen on
+# KUBELET_PORT="--kubelet-port=10250"
 
 # Address range to use for services
 KUBE_SERVICE_ADDRESSES="--service-cluster-ip-range={{ kube_service_addresses }}"
 
+# Location of the etcd cluster
+KUBE_ETCD_SERVERS="--etcd-servers={% for node in groups['etcd'] %}{% if etcd_url_scheme is defined %}{{ etcd_url_scheme }}{% else %}http{% endif %}://{{ node }}:{{ etcd_client_port }}{% if not loop.last %},{% endif %}{% endfor %}{% if etcd_url_scheme is defined and etcd_url_scheme == 'https' %} --etcd-cafile={{ apiserver_etcd_ca_file }} --etcd-certfile={{ apiserver_etcd_cert_file }} --etcd-keyfile={{ apiserver_etcd_key_file }}{% endif %}"
+
+# default admission control policies
+KUBE_ADMISSION_CONTROL="--admission-control={{ admission_controllers }}"
 
 # Add your own!
-KUBE_API_ARGS=""
-
+KUBE_API_ARGS="{{ kube_apiserver_options|join(' ') }} {{ kube_apiserver_additional_options|join(' ') }}"

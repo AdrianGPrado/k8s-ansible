@@ -1,4 +1,4 @@
 ---
 
 dependencies:
-  - { role: docker, when: docker_completed is not defined }
+  - { role: common, when: common_completed is not defined }
