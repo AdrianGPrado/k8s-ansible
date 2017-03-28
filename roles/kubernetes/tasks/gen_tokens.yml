@@ -1,4 +1,5 @@
 ---
+
 - name: Copy the token gen script
   copy:
     src=kube-gen-token.sh
@@ -33,3 +34,4 @@
   changed_when: "'Added' in gentoken_node.stdout"
   notify:
     - restart daemons
+

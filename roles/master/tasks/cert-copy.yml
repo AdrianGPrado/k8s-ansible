@@ -1,4 +1,5 @@
 ---
+
 - name: Read back the api-server certificates
   slurp:
     src: "{{ item }}"
@@ -19,3 +20,4 @@
   with_items: "{{ apiserver_certs.results }}"
   when: inventory_hostname in groups['masters'] and 
         inventory_hostname != groups['masters'][0]
+

@@ -2,9 +2,7 @@
 - name: Make sure etcd certificate vars are set
   fail:
     msg: "etcd certificates weren't slurped. Aborting ..."
-  when: etcd_ca_cert is not defined or 
-        etcd_client_cert is not defined or 
-        etcd_client_key is not defined
+  when: etcd_ca_cert is not defined or etcd_client_cert is not defined or etcd_client_key is not defined
 
 - name: Make sure Kubernetes apiserver etcd certs dir exists
   file:
