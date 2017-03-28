@@ -1,4 +1,5 @@
 ---
+
 - name: Install openssl for easy-rsa stuff
   package:
     name: "{{ item }}"
@@ -7,11 +8,12 @@
     - openssl
     - curl
 
-#- name: Get create ca cert script from Kubernetes
-#  get_url:
-#    url=https://raw.githubusercontent.com/kubernetes/kubernetes/master/cluster/saltbase/salt/generate-cert/make-ca-cert.sh
-#    dest={{ kube_script_dir }}/make-ca-cert.sh mode=0500
-#    force=yes
+- name: Get create ca cert script from Kubernetes
+  get_url:
+    url=https://raw.githubusercontent.com/kubernetes/kubernetes/master/cluster/saltbase/salt/generate-cert/make-ca-cert.sh
+    dest={{ kube_script_dir }}/make-ca-cert.sh 
+    mode=0500
+    force=yes
 
 - name: HACK | overwrite make-ca-cert.sh from local copy
   copy:

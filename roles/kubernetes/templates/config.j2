@@ -21,8 +21,7 @@ KUBE_ALLOW_PRIV="--allow-privileged=true"
 
 # How the controller-manager, scheduler, and proxy find the apiserver
 {% if cluster_hostname | default("") != "" %}
-KUBE_MASTER="--master={{ cluster_url_scheme }}://{{ cluster_hostname }}:{{ cluster_port }}"
+KUBE_MASTER="--master=https://{{ cluster_hostname }}:{{ cluster_port }}"
 {% else %}
-KUBE_MASTER="--master={{ cluster_url_scheme }}://{{ groups['masters'][0] }}:{{ kube_master_api_port }}"
+KUBE_MASTER="--master=https://{{ groups['masters'][0] }}:{{ kube_master_api_port }}"
 {% endif %}
-

@@ -9,7 +9,7 @@ source_type: packageManager
 # will be used as the Internal dns domain name if DNS is enabled. Services
 # will be discoverable under <service-name>.<namespace>.svc.<domainname>, e.g.
 # myservice.default.svc.cluster.local
-cluster_name: cluster.local
+cluster_name: nrg.cluster.local
 
 # Set if you want to access kubernetes cluster via load balancer. The installer
 # assumes that a load balancer has been preconfigured or resolves to
@@ -93,14 +93,11 @@ cluster_logging: true
 # Turn to false to disable cluster monitoring with heapster and influxdb
 cluster_monitoring: true
 
-# Turn to false to disable the kube-ui addon for this cluster
-kube_ui: false
-
 # Turn to false to disable the kube-dash addon for this cluster
-kube_dash: false
+kube_dash: true
 
 # Turn to false to disable the node_problem_detector addon for this cluster
-node_problem_detector: false
+node_problem_detector: true
 
 # Turn this varable to 'false' to disable whole DNS configuration.
 dns_setup: true
@@ -136,3 +133,4 @@ flannel_etcd_use_certs: true
 apiserver_etcd_use_certs: true
 
 etcd_interface: "eth1"
+

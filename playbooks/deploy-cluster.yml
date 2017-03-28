@@ -15,7 +15,7 @@
 - include: deploy-master.yml
 
 # launch addons, like dns
-# - include: deploy-addons.yml
+- include: deploy-addons.yml
 
 # install kubernetes on the nodes
 - include: deploy-node.yml

@@ -1,20 +1,21 @@
 ---
 
-- debug:
-    msg="{{ master_url_scheme }}"
-
 - name: Write the config file for the api server
   template: 
     src=apiserver.j2 
     dest={{ kube_config_dir }}/apiserver
-  notify:
-    - restart daemons
 
 - name: Ensure that a token auth file exists (addons may populate it)
   file: 
     path={{ kube_token_dir }}/known_tokens.csv 
     state=touch
   changed_when: false
+
+- name: Add cap_net_bind_service to kube-apiserver
+  capabilities: 
+    path=/usr/bin/kube-apiserver 
+    capability=cap_net_bind_service=ep 
+    state=present
 
 - name: Setting the apiserver_modified fact to true
   set_fact:
