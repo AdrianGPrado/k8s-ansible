@@ -1,14 +1,29 @@
 ---
 
-# Install package
-- name: Install Flannel with package manager
-  package:
-    name: flannel
-    state: latest
+- name: Read etcd certificates
+  include: etcd-certs.yml
+  when: flannel_etcd_use_certs
 
-# Configure
-- name: Write flanneld config file
-  template: 
-    src=flanneld.j2 
-    dest={{ flannel_config_dir }}/flanneld
+- name: Configure etcd network
+  include: config.yml
+  when: flannel_etcd_use_certs
+
+- name: Install client
+  include: client.yml
+
+- include: firewalld.yml
+  when: has_firewalld
+
+- name: Enable flannel
+  service: 
+    name=flanneld 
+    enabled=yes
+
+- name: Start flannel
+  service: 
+    name=flanneld 
+    state=started
+  register: flannel_started
+  notify:
+    - restart docker
 

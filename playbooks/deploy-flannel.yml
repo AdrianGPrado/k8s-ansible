@@ -4,7 +4,7 @@
     - nodes
   become: yes
   roles:
-#    - { role: etcd-certs, when: flannel_etcd_use_certs|default(false) }
+    - { role: etcd-certs, when: flannel_etcd_use_certs|default(false) }
     - { role: flannel }
   tags:
     - network-service-install

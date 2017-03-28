@@ -1,0 +1,16 @@
+---
+
+- name: Install kubernetes master
+  package:
+    name=kubernetes-master
+    state=latest
+  notify:
+    - restart daemons
+  environment:
+    http_proxy: "{{ http_proxy|default('') }}"
+    https_proxy: "{{ https_proxy|default('') }}"
+    no_proxy: "{{ no_proxy|default('') }}"
+
+- include: etcd-certs.yml
+  when: apiserver_etcd_use_certs
+
