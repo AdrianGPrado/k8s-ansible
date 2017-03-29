@@ -38,7 +38,7 @@ kube_apiserver_options:
   - "--tls-private-key-file={{ kube_cert_dir }}/server.key"
   - "--client-ca-file={{ kube_cert_dir }}/ca.crt"
   - "--token-auth-file={{ kube_token_dir }}/known_tokens.csv"
-  - "--service-account-key-file={{ kube_cert_dir }}/server.crt"
+  - "--service-account-key-file={{ kube_cert_dir }}/server.key"
   - "--bind-address={{ kube_apiserver_bind_address }}"
   - "--apiserver-count={{ groups['masters']|length }}"
 
